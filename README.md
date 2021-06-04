@@ -1,3 +1,6 @@
+Original Readme: https://github.com/Dejvino/pinephone-sway-poc/blob/master/README.md
+
+
 # pinephone-sway-nimbin
 some sxmo scripts badly modded to work with sway on the PinePhone
 https://sr.ht/~mil/Sxmo/
