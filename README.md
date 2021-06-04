@@ -1,86 +1,176 @@
-# pinephone-sway-poc
-Sway UI configured for PINE64 PinePhone (Proof Of Concept)
+# pinephone-sway-nimbin
+some sxmo scripts badly modded to work with sway on the PinePhone
+https://sr.ht/~mil/Sxmo/
 
-You can find ready-made config files, scripts and installation instructions on how to set up Sway on Arch Linux ARM or postmarketOS and use it with a PinePhone.
+I never learned how to write good code. Whatever you do you do on your own risk. Please read through all scripts before using them. Never execute a command you don't know what it's doing.
 
-![Screenshots](./screenshots.png)
 
-## Install
-### postmarketOS
-Start with a [postmarketOS](https://wiki.postmarketos.org/wiki/PINE64_PinePhone_(pine64-pinephone)) for PinePhone image with `postmarketos-ui-sway` installed. Either use the pre-built demo image or build a custom one with `pmbootstrap`.
+I'm using Dejvino's sway poc: https://github.com/Dejvino/pinephone-sway-poc
 
-Flash the system onto the phone (either to an SD card or directly to the eMMC with Jumpdrive).
+And dreemurrs Arch linux distro: https://github.com/dreemurrs-embedded/Pine64-Arch/releases
+So maybe some scripts just work with thoose in the backpack..
 
-Open a terminal on the phone (either through SSH, the serial connection or directly on the screen) and run this:
-```bash
-# system components
-$ sudo apk add waybar bemenu swaylock swayidle squeekboard bash dialog tzdata
+Actually the dialer and sms script work with vis-menu, sou you'll get a terminal window with a list of your contacts (~/.config/sxmo/contacts.tsv) to choose.
 
-# user components
-$ sudo apk add networkmanager htop pavucontrol
+### Make file
+Please read through the Make file and change it to your needs.
+Make sure to install Dejvino's sway poc first.
 
-# build tools
-$ sudo apk add git make meson ninja cargo linux-headers libinput-dev eudev-dev
+<table>
+   <thead><th>Command</th><th>Hint</th></thead>
+   <tbody>
+	   <tr><td>make install</td><td>1. Install required packages for arch build</br>2. Copy all required scripts to system.</br>3. Create a diff file if the file existed on system in "diff/$(DATE_YYMMDD)/"</br>4. Enable required services</td></tr>
+	   <tr><td>make fetch</td><td>1. Copy all required scripts from system to this directory.</br>2. Create a diff file if the file exist "diff/$(DATE_YYMMDD)/"</td></tr>
+   </tbody>
+</table>
+
+
+
+### Required packages
+If you just install whats listed here it's your problem^^
+```
+sudo pacman --needed -Sy alsa-utils bc rsync bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc font-noto noto-fonts-emoji noto-fonts-extra
+sudo pacman --needed -Sy noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
+```
+You should edit your sway config:
+```
+# ~/.config/sway/config
+
+...
+exec mako
 ```
 
-### Arch Linux ARM
-Start with a [Pine64-Arch](https://github.com/dreemurrs-embedded/Pine64-Arch/) image flashed to the phone. You'll need the `sway` package and most of what is mentioned in the `postmarketOS` section. Disable (or remove) the default `phosh` package so that it doesn't get loaded on boot.
+### Auto login
+If you use the encrypted arch version you can use an auto login tty and start sway from the .bash_profile over the sxmo_xinit.sh script, that should also config some maybe needed main stuff..
 
-### Common
-```bash
-# installation
-$ git clone --recurse-submodules https://github.com/Dejvino/pinephone-sway-poc
-$ cd pinephone-sway-poc
-$ make install_user
-$ sudo make install_system
+```
+# /etc/systemd/system/getty@tty1.service.d/override.conf
+# replace username with your username
 
-# power button
-sudo vim /etc/systemd/logind.conf # or /etc/elogind/logind.conf for non-systemd distros (pmOS)
-# replace:
-# #HandlePowerKey=poweroff
-# with:
-# HandlePowerKey=suspend
+[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin username --noclear %I $TERM
 ```
 
-That's it. You should now have everything in place. Reboot to use the new settings.
 
-## Usage
-Study the provided config files and shell scripts to get more details. The following is just an introduction.
-
-### Power Button
-The power button activates or deactivates a "sleep mode" (suspend). This mode is automatically entered after a period of inactivity (via swayidle). Before that, the backlight is first turned low, then the backlight is turned off and all the CPUs except for the primary one are shut down. The indicator LED is used to indicate the power mode: 1) green = running, low power usage, 2) blue = suspend.
-
-### Top and bottom waybar
-The bars show you CPU/MEM usage, backlight brightness, time, etc. Touching them opens a relevant app (e.g. NetworkManager or htop). Touching the date opens a custom "quick execute" menu to launch an app. The **[x]** icon closes the active window. Touching the backlight indicator brings up a custom brightness setting app.
-
-### Touch gestures
-Swiping two fingers up / down activates or hides the on-screen keyboard. Swiping two fingers left / right changes the active workspace. Three fingers change the active window in the direction of the swipe. Four fingers move the active window accordingly.
-
-### Screen Rotation
-The screen is automatically rotated based on the readings from the phone's built-in accelerometer.
-
-## TIP!
-You can use this as a configs backup mechanism!
 ```
-$ make fetch
+# ~/.bash_profile 
+
+if [ -z $DISPLAY ] && [ "$(tty)" == "/dev/tty1" ]; then
+   exec sxmo_xinit.sh
+fi
 ```
-Running this command gathers the relevant config files from your running system and replaces the files in the repository. You can then `git add` and `commit` your own changes, straight from the phone! This is actually how the config files here were created.
 
-## Components
-* postmarketOS / Arch Linux ARM - base Linux distribution (though any other would work as well)
-* sway (packaged) - tiling Wayland compositor
-* * swayidle, swaylock - utils for sway
-* bemenu (packaged) - app launcher
-* waybar (packaged) - Wayland status bar
-* * [carlosdss22/dotfiles](https://github.com/carlosdss22/dotfiles/tree/master/waybar) - styles used
-* squeekboard (packaged) - on-screen keyboard for Wayland
-* * [terminal.yaml](https://source.puri.sm/btantau/squeekboard/blob/btantau-master-patch-76686/data/keyboards/terminal.yaml) - keyboard layout based on this improved version
-* [pinephone-toolkit](https://github.com/Dejvino/pinephone-toolkit) - various utilities for the PinePhone
-* [sxmo-lisgd](https://git.sr.ht/~mil/lisgd) - gesture detection daemon
-* [rot8](https://github.com/efernau/rot8) - screen rotation daemon using data from the accelerometer
-* htop (packaged) - Processes monitoring
-* pavucontrol (packaged) - PulseAudio control panel
-* mako (packaged) - Notify daemon
+### Set sim pin
+To get asked for sim pin after login edit your sway config file
+```
+# ~/.config/sway/config
+...
+exec '[[ "$(swayphone_simstate)" == "registered" ]] && notify-send -t 5000 "Sim is registered" || termite -e swayphone_unlocksim'
+```
 
-(*packaged* = available as a package directly from the repository)
+### Modemmonitor and Notificationsmonitor
+Enable sway specific daemons like recommended in the wiki
+https://wiki.archlinux.org/title/Sway#Manage_Sway-specific_daemons_with_systemd
+
+move the services/sxmo_modemmonitor.service snd services/sxmo_notifications.service to ~/.config/systemd/user/sxmo_modemmonitor.service
+
+and enable Modemmonitor:
+```
+systemctl --user enable --now sxmo_modemmonitor.service
+```
+
+and enable Notificationsmonitor:
+```
+systemctl --user enable --now sxmo_notifications.service
+```
+
+### Autorotate
+enable sway specific daemon ( check "Modemmonitor and Notificationsmonitor") </br>
+move the File services/swayphone_autorotate.service file to ~/.config/systemd/user/</br>
+move the File swayphone/swayphone_autorotate file to /usr/local/bin/swayphone_autorotate</br>
+enable the Service:
+```
+systemctl --user enable --now swayphone_autorotate.service
+```
+you can also set the direction manually by entering something like:
+```
+swayphone_autorotate rotate_270
+```
+
+### ModemMonitor
+I was having problems with mmcli commands, as they needed sudo rights.</br>
+I got rid of the problem by doing two things, i think just one is doing the trick, idk wich one...
+
+1: add /etc/polkit-1/localauthority/50-local.d/ModemManager.pkla
+```
+# /etc/polkit-1/localauthority/50-local.d/ModemManager.pkla
+
+[ModemManager]
+Identity=unix-user:*
+Action=org.freedesktop.ModemManager1.*
+ResultAny=yes
+ResultActive=yes
+ResultInactive=yes
+```
+2: rename or remove /usr/share/dbus-1/system-services/org.freedesktop.ModemManager1.service
+
+### Network scripts
+To get the togglewifi.sh and togglemobileconnection.sh script work you should add an entry in your sudoers file (dont do shit over there and take care as you gonna edit it with a vi editor)
+```
+sudo visudo
+```
+```
+YOURUSERNAME ALL=NOPASSWD:/usr/local/bin/togglemobileconnection.sh
+YOURUSERNAME ALL=NOPASSWD:/usr/local/bin/togglewifi.sh
+```
+
+### Gsm connection
+To get the togglemobileconnection.sh script to work you need to add a gsm connection called "mobileconnection" (or rename "mobileconnection" in the script)</br>
+some hints you can find here: https://unix.stackexchange.com/questions/113975/configure-gsm-connection-using-nmcli
+
+
+### Flash light
+sxmo_flashtoggle.sh not working? add it to the sudoers file,...
+
+### German keyboard
+rename the file de.yaml in the "other" directory to us.yaml and place it in the following two directories. (it switched sometimes back to the default layout if you just place it in the ~/config dir like recommended at the squeekboard git)</br> 
+~/.config/squeekboard/keyboards/ </br>
+~/.local/share/squeekboard/keyboards/
+
+### Add a contact
+edit or add the file ~/.config/sxmo/contacts.tsv and enter a contact like
+```
++49000000000 My Contact
+```
+
+### Firefox mobile friendly
+Clone postmarketOS mobile-config-firefox git repository and install it
+
+```
+git clone https://gitlab.com/postmarketOS/mobile-config-firefox.git
+cd mobile-config-firefox/
+sudo make DISTRO=aarch64 install
+```
+
+### Main menu
+Make sure you got the  the waybar config file at the right direction.
+Make sure you got the termite config file at the right direction
+```
+# move waybar config file
+mv waybar/config0 ~/.config/waybar/config_0
+# move termite config file
+mkdir -p ~/.config/termite
+mv other/config_menu .config/termite/config_menu
+```
+Add the following line to your sway config file to alwas open the dialog menu sticky and fullscreen.
+```
+# ~/.config/sway/config
+...
+for_window [app_id="^mainMenu$"] {
+	floating enable
+	border pixel 0
+	sticky enable
+}
+```
 
