@@ -1,0 +1,10 @@
+[Unit]
+Description=Notifications service
+BindsTo=sway-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sxmo_notificationmonitor.sh
+
+[Install]
+WantedBy=sway-session.target

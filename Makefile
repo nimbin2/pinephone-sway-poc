@@ -1,75 +1,145 @@
 HOME_PATH=~
 BIN_PATH=/usr/local/bin
 
+RED=\033[1;31m
+YELLOW=\033[1;33m
+GREEN=\033[0;32m
+NC=\033[0m
+
+REQUIRED_PACKAGES=alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
+REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
+
+INSTALL_PACMAN_Y=sudo pacman --needed -Sy
+INSTALL_PACMAN=sudo pacman --needed -S
+
+FILES_SWAY=usr/local/bin/swayphone_* home/config/sway/config home/config/swayphone/menuoptions*
+FILES_WAYBAR=home/config/waybar/config*
+FILES_HTOP=home/config/htop/*
+FILES_SXMO=usr/bin/sxmo_* usr/share/sxmo/alsa/default_alsa_sound.conf
+FILES_NETWORK=usr/local/bin/togglewifi.sh usr/local/bin/togglemobileconnection.sh
+FILES_TERMITE=home/config/termite/config_menu
+FILES_KEYBOARD=home/config/squeekboard/keyboards/us* home/local/share/squeekboard/keyboards/us*
+FILES_SERVICES=home/config/systemd/user/sxmo_* home/config/systemd/user/swayphone_autorotate.service home/config/systemd/user/sway-session.target  
+FILES_LIGHTDM=usr/share/wayland-sessions/*
+FILES_LISDG=lisgd/lisgd
+
 help:
 	@echo " Available Actions:"
-	@echo "	install_user 	- builds & copies files into the user's home"
-	@echo "	install_system 	- builds & copies files into the system"
-	@echo "	fetch		- copies files from the system into this build directory"
-	@echo "	help		- this!"
+	@echo "	install	- builds & copies files into the user's home and system"
+	@echo "	fetch	- copies files from the system into this build directory"
+	@echo "	help	- this!"
+	@echo "	help_install	- list what is done if doing \"make install\""
+
+
 
 ###
+# HELP
+###
+help_install: 
+	@echo -e "copys all files to the system using the copyfile.sh script"
+	@echo -e "	If file exist on system create a diff file in diff/DATE_YY_MM_DD/FILENAME"
+	@echo -e "	Log file is at diff/DATE_YY_MM_DD/diff.log"
+
+make_wait: 
+	$(info $(shell echo -e "${GREEN}Enter to continue:${NC}"))
+	$(info $(shell read))
+
+help_install_packages:
+	@echo -e "${GREEN}install_packages:${NC}"
+	@echo -e "REQUIRED_PACKAGES:"
+	@echo -e "${YELLOW}${INSTALL_PACMAN_Y}${NC} ${REQUIRED_PACKAGES}"
+	@echo -e "REQUIRED_PACKAGES_ADD:"
+	@echo -e "${YELLOW}${INSTALL_PACMAN}${NC} ${REQUIRED_PACKAGES_ADD}"
+
+###
+
 # INSTALL - USER
 ###
-install_user: install_user_sway install_user_waybar install_user_htop
 
-install_user_sway:
-	mkdir -p $(HOME_PATH)/.config/sway/
-	cp home/config/sway/* $(HOME_PATH)/.config/sway/config
+install: install_packages install_sway install_waybar install_htop install_lightdm install_pptk install_lisgd install_sxmo installl_network install_termite install_keyboard install_keyboard
 
-install_user_waybar:
-	mkdir -p $(HOME_PATH)/.config/waybar/
-	cp home/config/waybar/* $(HOME_PATH)/.config/waybar/
+install_packages: help_install_packages make_wait
+	$(INSTALL_PACMAN_Y) ${REQUIRED_PACKAGES}
+	$(INSTALL_PACMAN) ${REQUIRED_PACKAGES_ADD}
 
-install_user_htop:
-	mkdir -p $(HOME_PATH)/.config/htop/
-	cp home/config/htop/* $(HOME_PATH)/.config/htop/
-
-###
-# INSTALL - SYSTEM
-###
-install_system: install_system_check install_system_lightdm install_system_bin install_pptk install_rot8 install_lisgd
-
-install_system_check:
-	@echo "Note: install needs to be run as root."
-
-install_system_lightdm:
-	cp usr/share/wayland-sessions/* /usr/share/wayland-sessions/
-
-install_system_bin:
+install_sway:
+	@echo -e "${GREEN}Run install_sway${NC}"
 	chmod go+rx usr/local/bin/*
-	cp usr/local/bin/* /usr/local/bin/
+	./copyfile.sh "install" "${FILES_SWAY}"
+
+install_waybar:
+	@echo -e "${GREEN}Run install_waybar${NC}"
+	./copyfile.sh "install" "${FILES_WAYBAR}"
+
+install_htop:
+	@echo -e "${GREEN}Run install_htop${NC}"
+	./copyfile.sh "install" "${FILES_HTOP}"
+
+
+install_lightdm:
+	@echo -e "${GREEN}Run install_lightdm${NC}"
+	./copyfile.sh "install" "${FILES_LIGHTDM}"
 
 install_pptk:
+	@echo -e "${GREEN}Run install_pptk${NC}"
 	cd pinephone-toolkit && meson build 
 	ninja -C pinephone-toolkit/build
 	ninja -C pinephone-toolkit/build install
 
-install_rot8:
-	cd rot8 && cargo build --release
-	cp rot8/target/release/rot8 /usr/local/bin/
-
 install_lisgd:
+	@echo -e "${GREEN}Run install_lisdg${NC}"
 	cd lisgd && git fetch origin && git reset --hard 877beea2738df5f3a99da3f4e2ab5442b92baa80
 	cd lisgd && git apply ../patches/lisgd.patch
 	cd lisgd && make
-	cp lisgd/lisgd /usr/local/bin/
+	./copyfile.sh "install" "${FILES_LISDG}"
+	cp  /usr/local/bin/
+
+install_sxmo:
+	@echo -e "${GREEN}Run install_sxmo${NC}"
+	./copyfile.sh "install" "${FILES_SXMO}"
+
+installl_network:
+	@echo -e "${GREEN}Run installl_network${NC}"
+	./copyfile.sh "install" "${FILES_NETWORK}"
+
+install_termite:
+	@echo -e "${GREEN}Run install_termite${NC}"
+	./copyfile.sh "install" "${FILES_TERMITE}"
+
+install_keyboard:
+	@echo -e "${GREEN}Run install_keyboard${NC}"
+	./copyfile.sh "install" "${FILES_KEYBOARD}"
+
+install_services:
+	@echo -e "${GREEN}Run install_services${NC}"
+	./copyfile.sh "install" "${FILES_SERVICES}"
+	systemctl --user --now enable sxmo_modemmonitor
+	systemctl --user --now enable swayphone_autorotate
+	systemctl --user --now enable sxmo_notifications
 
 ###
 # FETCH
 ###
-fetch: fetch_sway fetch_waybar fetch_htop fetch_lightdm
+fetch: fetch_sway fetch_waybar fetch_sxmo fetch_services fetch_termite fetch_network fetch_keyboard
 
 fetch_sway:
-	cp $(HOME_PATH)/.config/sway/config home/config/sway/config
+	./copyfile.sh "fetch" "${FILES_SWAY}"
 
 fetch_waybar:
-	cp $(HOME_PATH)/.config/waybar/config* home/config/waybar/
-	cp $(HOME_PATH)/.config/waybar/style.css home/config/waybar/
+	./copyfile.sh "fetch" "${FILES_WAYBAR}"
 
-fetch_htop:
-	cp $(HOME_PATH)/.config/htop/htoprc home/config/htop/
+fetch_sxmo:
+	./copyfile.sh "fetch" "${FILES_SXMO}"
 
-fetch_lightdm:
-	cp /usr/share/wayland-sessions/sway.desktop usr/share/wayland-sessions/
+fetch_services:
+	./copyfile.sh "fetch" "${FILES_SERVICES}"
+
+fetch_network:
+	./copyfile.sh "fetch" "${FILES_NETWORK}"
+
+fetch_termite:
+	./copyfile.sh "fetch" "${FILES_TERMITE}"
+
+fetch_keyboard:
+	./copyfile.sh "fetch" "${FILES_KEYBOARD}"
 

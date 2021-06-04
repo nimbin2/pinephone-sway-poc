@@ -1,0 +1,4 @@
+Telegram =$ telegram-desktop
+Sms =$ swayphone_keyboard_show && termite -e sxmo_modemtext.sh
+Call =$ swayphone_keyboard_show && termite -e sxmo_modemdial.sh && swayphone_keyboard_show
+Modemlog =$ sxmo_modemlog.sh

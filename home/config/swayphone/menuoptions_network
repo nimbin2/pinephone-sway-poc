@@ -1,0 +1,2 @@
+Toggle gsm =$ reload_menu sudo togglemobileconnection.sh
+Toggle wifi =$ reload_menu sudo togglewifi.sh

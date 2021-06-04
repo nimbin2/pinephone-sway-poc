@@ -1,0 +1,7 @@
+Speaker =$ reload_menu_preset sxmo_audioout.sh Speaker
+Headphones =$ reload_menu_preset sxmo_audioout.sh Headphones
+Earpiece =$ reload_menu_preset sxmo_audioout.sh Earpiece
+Vol up =$ reload_menu_preset sxmo_vol.sh up
+Vol down =$ reload_menu_preset sxmo_vol.sh down
+Mute =$ reload_menu_preset sxmo_vol.sh mute
+Unmute =$ reload_menu_preset sxmo_vol.sh unmute

@@ -1,0 +1,332 @@
+---
+outlines:
+    action:    { width: 59,    height: 46 }
+    small:     { width: 50,    height: 26 }
+    default:   { width: 35.33, height: 46 }
+    altline:   { width: 48,    height: 46 }
+    wide:      { width: 50,    height: 46 }
+    spaceline: { width: 110,   height: 46 }
+    special:   { width: 44,    height: 46 }
+
+views:
+    base:
+        - "Escsmall minussmall colonsmall slashsmall doublequotesmall ↑ questionsmall exclamationsmall"
+        - "Tabsmall Ctrl Alt pipesmall ← ↓ → szsmall"
+        - "q w e r t z u i o p ü"
+        - "a s d f g h j k l ä"
+        - "Shift_L y x c v b n m ö BackSpace"
+        - "show_numbers show_eschars   preferences         space    .     show_actions Return"
+    upper:
+        - "dollasmall underlinesmall semicolonsmall backslashsmall singlequotesmall ↑ PgDn PgUp"
+        - "braceopensmall braceclosesmall compleftsmall comprightsmall ← ↓ → szsmall"
+        - "Q W E R T Z U I O P Ü"
+        - "A S D F G H J K L Ä"
+        - "Shift_L Y X C V B N M Ö BackSpace"
+        - "show_numbers show_eschars preferences         space     ,    show_actions Return"
+    numbers:
+        - "Escsmall minussmall colonsmall slashsmall doublequotesmall ↑ questionsmall exclamationsmall"
+        - "Tabsmall Ctrl Alt pipesmall ← ↓ → szsmall"
+        - "1 2 3 4 5 6 7 8 9 0 >"
+        - "@ # € % & - _ + ( ) <"
+        - "show_symbols , \" ' colon ; ! ? | BackSpace"
+        - "show_letters . preferences         space        show_eschars show_actions Return"
+    symbols:
+        - "Escsmall minussmall colonsmall slashsmall doublequotesmall ↑ questionsmall exclamationsmall"
+        - "Tabsmall Ctrl Alt pipesmall ← ↓ → szsmall"
+        - "~ ` | · √ π τ ÷ × ¶"
+        - "© ® £ $ ¥ ^ ° * { }"
+        - "show_numbers_from_symbols   \\ / < > = [ ]  BackSpace"
+        - "show_letters preferences         space        show_eschars show_actions Return"
+    escharsOLD:
+        - "Ctrl Alt Tabsmall ↑ ↓ ← →"
+        - "à â ç é è ê î ô ù û"
+        - "À Â Ç É È Ê Î Ô Ù Û"
+        - "show_numbers_from_symbols  æ œ ä ë ï ö ü  BackSpace"
+        - "show_letters preferences         space        show_eschars show_actions Return"
+    eschars:
+        - "😀 😁 😅 😂 😊 😇 🙃 👌 👋"
+        - "😍 😘 😋 😜 😎 🥳 😔 👍 👎"
+        - "😢 😭 😡 😱 🤔 😬 🙄 🙌 👏"
+        - "🤩 🤨 🤓 😴 🤢 🤮 😈 💪 🖕"
+        - "show_letters show_three 💩 🙏 💋 🤦‍♀️ 🤷‍♀️ 💃"
+    three:
+        - "🐶 🐱 🐯 🙈 🐴 🦄 🌳"
+        - "🍀 🌹 💫 ⭐️ ✨ 💥 🔥"
+        - "🌈 ☀️ 🌤 🌧 ⛄️ ☂️ 🌊"
+        - "show_letters show_four 1 2 3 4 5 6"
+    four:
+        - "🍎 🍓 🍑 🍍 🍆 🥑 🥦"
+        - "🍕 🎂 🍫 🍿 🍻 🍾 🍽"
+        - "⚽️ 🏀 🏓 🏆 🎹 🎸 🎯"
+        - "🚗 🚌 🚲 🚄 🚂 ✈️  🛰"
+        - "show_letters show_five 1 2 3 4 5 6"
+    five:
+        - "🚀 🛸 🚁 🚦 🏝 🏔 ⛺️"
+        - "🏠 🏢 🏥 🏛 🛤 🌅 🎇"
+        - "⌚️ 📱 💻 🖥 🖨 🕹 ✉️"
+        - "📞 ☎️ ⏰ ⏳ 📈 📉 📌"
+        - "show_letters show_eschars 🎁 ❤️ 💕 💯 ✅ ❎ 📢"
+
+
+    actions:
+        - "Ctrl Alt PgUp PgDn Home End"
+        - "F1  F2  F3  F4  F5  F6 VolU"
+        - "F7  F8  F9  F10 F11 F12 VolD"
+        - "Esc Tab Pause Insert Up Del"
+        - "show_letters Menu Break Left Down Right"
+
+ 
+buttons:
+    F1:
+        outline: "action"
+        keysym: "F1"
+    F2:
+        outline: "action"
+        keysym: "F2"
+    F3:
+        outline: "action"
+        keysym: "F3"
+    F4:
+        outline: "action"
+        keysym: "F4"
+    F5:
+        outline: "action"
+        keysym: "F5"
+    F6:
+        outline: "action"
+        keysym: "F6"
+    F7:
+        outline: "action"
+        keysym: "F7"
+    F8:
+        outline: "action"
+        keysym: "F8"
+    F9:
+        outline: "action"
+        keysym: "F9"
+    F10:
+        outline: "action"
+        keysym: "F10"
+    F11:
+        outline: "action"
+        keysym: "F11"
+    F12:
+        outline: "action"
+        keysym: "F12"
+    Esc:
+        outline: "action"
+        keysym: "Escape"
+    Escsmall:
+        label: "Esc"
+        outline: "small"
+        keysym: "Escape"
+    Tab:
+        outline: "action"
+        keysym: "Tab"
+    Tabsmall:
+        outline: "small"
+        keysym: "Tab"
+        label: "Tab"
+    Del:
+        outline: "action"
+        keysym: "Delete"
+    Insert:
+        outline: "action"
+        keysym: "Insert"
+    Menu:
+        outline: "action"
+        keysym: "Menu"
+    Pause:
+        outline: "action"
+        keysym: "Pause"
+    Break:
+        outline: "action"
+        keysym: "Break"
+    Home:
+        outline: "small"
+        keysym: "Home"
+    End:
+        outline: "small"
+        keysym: "End"
+    PgUp:
+        outline: "small"
+        keysym: "Page_Up"
+    PgDn:
+        outline: "small"
+        keysym: "Page_Down"
+    "↑":
+        outline: "small"
+        keysym: "Up"
+    "↓":
+        outline: "small"
+        keysym: "Down"
+    "←":
+        outline: "small"
+        keysym: "Left"
+    "→":
+        outline: "small"
+        keysym: "Right"
+    Up:
+        label: "↑"
+        outline: "action"
+        keysym: "Up"
+    Left:
+        label: "←"
+        outline: "action"
+        keysym: "Left"
+    Down:
+        label: "↓"
+        outline: "action"
+        keysym: "Down"
+    Right:
+        label: "→"
+        outline: "action"
+        keysym: "Right"
+    Ctrl:
+        modifier: "Control"
+        outline: "small"
+        label: "Ctrl"
+    Alt:
+        modifier: "Alt"
+        outline: "small"
+        label: "Alt"
+    VolU:
+        outline: "action"
+        keysym: "XF86MonBrightnessUp"
+    VolD:
+        outline: "action"
+        keysym: "XF86MonBrightnessDown"
+    period:
+        outline: "special"
+        text: "."
+    show_actions:
+        action:
+            set_view: "actions"
+        outline: "special"
+        label: ">_"
+    Shift_L:
+        action:
+            locking:
+                lock_view: "upper"
+                unlock_view: "base"
+        outline: "altline"
+        icon: "key-shift"
+    BackSpace:
+        outline: "altline"
+        icon: "edit-clear-symbolic"
+        action: erase
+    preferences:
+        action: "show_prefs"
+        outline: "special"
+        icon: "keyboard-mode-symbolic"
+    show_numbers:
+        action:
+            set_view: "numbers"
+        outline: "wide"
+        label: "123"
+    show_numbers_from_symbols:
+        action:
+            set_view: "numbers"
+        outline: "altline"
+        label: "123"
+    show_letters:
+        action:
+            set_view: "base"
+        outline: "wide"
+        label: "abc"
+    show_symbols:
+        action:
+            set_view: "symbols"
+        outline: "altline"
+        label: "*/="
+    show_eschars:
+        action:
+            set_view: "eschars"
+        outline: "altline"
+        label: ":)"
+    show_three:
+        action:
+            set_view: "three"
+        outline: "altline"
+        label: ":)"
+    show_four:
+        action:
+            set_view: "four"
+        outline: "altline"
+        label: ":)"
+    show_five:
+        action:
+            set_view: "five"
+        outline: "altline"
+        label: ":)"
+    show_five:
+        action:
+            set_view: "five"
+        outline: "altline"
+        label: ":)"
+
+
+
+    space:
+        outline: "spaceline"
+        text: " "
+    Return:
+        outline: "wide"
+        icon: "key-enter"
+        keysym: "Return"
+    colon:
+        text: ":"
+    colonsmall:
+        outline: "small"
+        text: ":"
+    semicolonsmall:
+        outline: "small"
+        text: ";"
+    slashsmall:
+        outline: "small"
+        text: "/"
+    backslashsmall:
+        outline: "small"
+        text: "\\"
+
+    pipesmall:
+        outline: "small"
+        text: "|"
+    minussmall:
+        outline: "small"
+        text: "-"
+    underlinesmall:
+        outline: "small"
+        text: "_"
+    questionsmall:
+        outline: "small"
+        text: "?"
+    exclamationsmall:
+        outline: "small"
+        text: "!"
+    singlequotesmall:
+        outline: "small"
+        text: "'"
+    doublequotesmall:
+        outline: "small"
+        text: "\""
+    comprightsmall:
+        outline: "small"
+        text: ">"
+    compleftsmall:
+        outline: "small"
+        text: "<"
+    braceclosesmall:
+        outline: "small"
+        text: ")"
+    braceopensmall:
+        outline: "small"
+        text: "("
+    dollasmall:
+        outline: "small"
+        text: "$"
+    szsmall:
+        outline: "small"
+        text: "ß"
+    "\"":
+        keysym: "quotedbl"

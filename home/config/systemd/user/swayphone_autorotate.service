@@ -1,0 +1,10 @@
+[Unit]
+Description=Auto rotate sway screen
+BindsTo=sway-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/swayphone_autorotate
+
+[Install]
+WantedBy=sway-session.target

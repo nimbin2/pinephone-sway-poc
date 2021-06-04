@@ -1,0 +1,7 @@
+Terminal =$ termite
+Music =$ termite -e cmus
+Firefox =$ firefox
+Qutebrowser =$ qutebrowser
+Calendar =$ termite -e calcurse
+Camera =$ megapixels
+Pictures =$ imv /home/mo/Pictures/*.jpg

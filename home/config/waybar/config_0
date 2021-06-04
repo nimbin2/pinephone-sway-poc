@@ -9,7 +9,8 @@
 
     "modules-left": [
         "sway/workspaces",
-        "tray"
+     //   "tray",
+        "custom/modem"
     ],
   
     "modules-center": [
@@ -17,7 +18,7 @@
     ],
 
     "modules-right": [
-    	"battery",
+    	"custom/battery",
         "clock#time"
     ],
 
@@ -39,7 +40,7 @@
         "format": " {:%e %b %Y}", // Icon: calendar-alt
         //"tooltip-format": "{:%e %B %Y}"
         "tooltip": true,
-	"on-click": "termite -e swayphone_menuselect"
+	"on-click": "swayphone_menu_open swayphone_menuselect"
     },
 
     "battery": {
@@ -59,8 +60,19 @@
             "", // Icon: battery-quarter
             ""  // Icon: battery-empty
         ],
+         "exec": "cat /sys/class/power_supply/*-battery/capacity",
         "tooltip": false
     },
+    "custom/battery": {
+        "format": "{}%    ", // Icon: bolt
+         "interval": 1,
+         "exec": "echo \"$(cat /sys/class/power_supply/*-battery/status | grep -q 'Charging' && echo '') $(cat /sys/class/power_supply/*-battery/capacity)\""
+   },
+    "custom/modem": {
+        "format": "{}",
+         "interval": 5,
+         "exec": "statusbar_modem.sh"
+   },
 
 
 

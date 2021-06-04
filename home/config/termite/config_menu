@@ -1,0 +1,55 @@
+# Solarized dark color scheme
+
+[options]
+font = Liberation Sans 15
+cell_height_scale = 1.4
+cell_width_scale = 1.79
+
+# "system", "on" or "off"
+cursor_blink = off
+
+[colors]
+foreground = #839496
+foreground_bold = #eee8d5
+#foreground_dim = #888888
+
+# little background
+background = #b6c2c3
+cursor = #b6c2c3
+
+# if unset, will reverse foreground and background
+#highlight = #
+
+# colors from color0 to color254 can be set
+# Menu name, inner left border, boxshadow
+color0 = #073642
+# first character not active
+color1 = #720604
+color2 = #ffffff
+color3 = #ffffff
+
+# cursor and second small background color
+color4 = #b6c2c3
+color5 = #ffffff
+color6 = #ffffff
+
+# container-background color
+color7 = #b6c2c3
+
+# color Cancel
+color8 = #002b36
+
+# active first character
+color9 = #a52e06
+
+color10 = #ffffff
+
+# color characters active
+color11 = #307aa7
+# color characters not active
+color12 = #073642
+color13 = #ffffff
+color14 = #ffffff
+# border-left
+color15 = #073642
+
