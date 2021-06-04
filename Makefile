@@ -6,7 +6,9 @@ YELLOW=\033[1;33m
 GREEN=\033[0;32m
 NC=\033[0m
 
-REQUIRED_PACKAGES=alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
+REQUIRED_PACKAGES=sway waybar bemenu swaylock swayidle squeekboard bash dialog tzdata networkmanager htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
+REQUIRED_PACKAGES_USER_COMPONENTS=networkmanager htop pavucontrol
+REQUIRED_PACKAGES_BUILD_TOOLS=git make meson ninja cargo linux-headers libinput-dev eudev-dev
 REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
 
 INSTALL_PACMAN_Y=sudo pacman --needed -Sy
@@ -60,6 +62,8 @@ install: install_packages install_sway install_waybar install_htop install_light
 
 install_packages: help_install_packages make_wait
 	$(INSTALL_PACMAN_Y) ${REQUIRED_PACKAGES}
+	$(INSTALL_PACMAN) ${REQUIRED_PACKAGES_USER_COMPONENTS}
+	$(INSTALL_PACMAN) ${REQUIRED_PACKAGES_BUILD_TOOLS}
 	$(INSTALL_PACMAN) ${REQUIRED_PACKAGES_ADD}
 
 install_sway:
@@ -92,7 +96,6 @@ install_lisgd:
 	cd lisgd && git apply ../patches/lisgd.patch
 	cd lisgd && make
 	./copyfile.sh "install" "${FILES_LISDG}"
-	cp  /usr/local/bin/
 
 install_sxmo:
 	@echo -e "${GREEN}Run install_sxmo${NC}"
