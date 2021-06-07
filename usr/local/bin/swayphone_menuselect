@@ -1,22 +1,79 @@
 #!/bin/bash
+swaymsg -t get_tree | grep -q termite_menu && kill -9 $(pgrep swayphone_menus | head -n1)
 
-MENUOPTIONS=~/.menuoptions
-MENUSELECT=~/.menuselect
+echo $1
+ARG=$1
+swayphone_keyboard_hide
 
+MENUOPTIONS=$XDG_CONFIG_HOME/swayphone/menuoptions
+MENUSELECT=$XDG_CONFIG_HOME/swayphone/menuselect
+MENUPRESELECT=""
 HEIGHT=0
 WIDTH=0
 LINES=0
 
-if [ ! -f $MENUOPTIONS ]
-then
-	echo 'termite Terminal' > $MENUOPTIONS
-	echo 'audacious "Music Player"' >> $MENUOPTIONS
-	echo 'firefox "Web Browser"' >> $MENUOPTIONS
-	echo '"sudo reboot" Restart' >> $MENUOPTIONS
-	echo '"sudo poweroff" Shutdown' >> $MENUOPTIONS
-fi
+reload=0
 
+SUBMENUS=$(ls $XDG_CONFIG_HOME/swayphone/menuoptions* | grep -o -P '(?<=\/menuoptions_).*' | xargs) 
+
+get_dir() {
+   if [[ -z $ARG ]] || [[ $ARG == "back" ]] || [[ $(echo $SUBMENUS | grep -cw $ARG) == 0 ]]; then
+      MENUNAME="Menu"
+      MENUOPTIONS=$XDG_CONFIG_HOME/swayphone/menuoptions
+      ARG=""
+   else
+      MENUNAME="$(echo $(echo ${ARG^}) | sed 's/_/ /')"
+      MENUOPTIONS=$XDG_CONFIG_HOME/swayphone/menuoptions_$ARG
+   fi
+      cat $MENUOPTIONS | grep -qw "Autorotate" && STATEAUTOROTATE="$(systemctl --user is-active swayphone_autorotate.service | grep -qw "active" && echo "on" || echo "off")"
+
+   [[ ! -s $MENUOPTIONS ]] && 
+      MENUNAME="Menu" &&
+      MENUOPTIONS=$XDG_CONFIG_HOME/swayphone/menuoptions &&
+      ARG=""
+}
+
+get_dialogmenu() {
+   echo $MENUOPTIONS | grep -q "_" &&
+      BACKCOLUMN='"< Back " ""' &&
+      cat $MENUOPTIONS | sed 's/ =\$.*$//g' | sed "s/^Autorotate$/Autorotate: $STATEAUTOROTATE/" | sed 's/^/"/' | sed 's/$/" ""/' | sed '$a\'"${BACKCOLUMN}"'' ||
+      cat $MENUOPTIONS | sed 's/ =\$.*$//g' | sed "s/^Autorotate$/Autorotate: $STATEAUTOROTATE/" | sed 's/^/"/' | sed 's/$/" ""/'
+}
+
+
+run_selected() {
+   MENUSELECTED=$(cat $MENUSELECT | sed 's/:.*$//')
+   MENUCOMMAND=$(cat $MENUOPTIONS | grep "$MENUSELECTED =\\$ " | sed "s/$MENUSELECTED =\\$ //" | sed "s/\$STATEAUTOROTATE/$STATEAUTOROTATE/")
+   echo $MENUCOMMAND | grep -q "^reload_menu " &&
+      MENUCOMMAND=$(echo $MENUCOMMAND | sed 's/^reload_menu //') &&
+      reload=1 || 
+      reload=0
+   echo $MENUCOMMAND | grep -q "^reload_menu_preset " &&
+      MENUCOMMAND=$(echo $MENUCOMMAND | sed 's/^reload_menu_preset //') &&
+      reload=1 && MENUPRESELECT=$(echo $MENUSELECTED) ||
+      MENUPRESELECT=""
+
+   echo $MENUSELECTED | grep -q '< Back' && reload=1 && ARG="" ||
+      swaymsg exec "`echo $MENUCOMMAND`" && wait
+}
+open_menu() {
+   get_dialogmenu | xargs dialog --default-item "$MENUPRESELECT" --menu $MENUNAME $HEIGHT $WIDTH $LINES  2>$MENUSELECT && 
+      run_selected
+}
+
+# main
 usleep 250000 # term stabilization
+get_dir
+open_menu
 
-cat $MENUOPTIONS | xargs dialog --menu EXECUTE $HEIGHT $WIDTH $LINES  2>$MENUSELECT && swaymsg exec "`cat $MENUSELECT`"
+# loop main if reload_menu is set in .menuoptions_* file
+while [ $reload -eq 1 ]; do
+   [[ -z $ARG ]] && ARG=$(echo $MENUSELECTED | awk '{print tolower($0)}')
+   [[ $ARG == '< back' ]] && ARG="back"
+   get_dir
+   open_menu
+   [[ ! -s $MENUSELECT ]] && reload=0
+done
 
+
+echo ""
