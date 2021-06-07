@@ -89,6 +89,10 @@ toggleflag() {
 	# shellcheck disable=SC2086
 	sxmo_megiaudioroute $NEWFLAGS &> /dev/null
 	echo -- "$NEWFLAGS"
+   amixer cset name='Mic1 Boost Volume' 0
+   amixer cset name='Mic1 Playback Volume' 7
+   amixer cset name='Mic2 Boost Volume' 0
+   amixer cset name='Mic2 Playback Volume' 7
 }
 
 toggleflagset() {
