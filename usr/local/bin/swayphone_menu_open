@@ -1,0 +1,9 @@
+#!/bin/bash
+#test
+MENU=$1
+[[ -z $MENU ]] && MENU="swayphone_menuselect"
+
+
+echo $MENU
+termite -c $XDG_CONFIG_HOME/termite/config_menu --name=termite_menu -e "$MENU"
+#echo "$XDG_CONFIG_HOME/termite/config_menu --name=termite_menu -e $swayphone_menuselect"
