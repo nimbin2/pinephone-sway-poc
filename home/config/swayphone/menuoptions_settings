@@ -1,5 +1,5 @@
 Autorotate =$ reload_menu_preset systemctl --user $([[ "$STATEAUTOROTATE" == "on" ]] && echo "stop" || echo "start") swayphone_autorotate.service
 Flashlight =$ reload_menu_preset sudo sxmo_flashtoggle.sh
-Unlock sim =$ [[ "$(swayphone_simstate)" == "registered" ]] && notify-send -t 5000 "Sim is registered" || swayphone_menu_open "swayphone_unlocksim"
+Unlock sim =$ [[ "$(swayphone_simstate)" == "registered" ]] && notify-send -t 5000 "Sim is registered" || swayphone_unlocksim
 Restart =$ reboot
 Shutdown =$ poweroff

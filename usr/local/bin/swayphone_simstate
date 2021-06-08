@@ -1,0 +1,15 @@
+#!/bin/bash
+
+modem_n() {
+	MODEMS="$(mmcli -L)"
+	echo "$MODEMS" | grep -oE 'Modem\/([0-9]+)' | cut -d'/' -f2
+	return
+}
+
+SIMSTATE="$(mmcli -m "$(modem_n)" | grep -m 1 "state: "  | awk  '{print $3}')"
+message_simstate() {
+	notify-send -t 5000 "Sim is $SIMSTATE"
+}
+
+#message_simstate
+echo "$SIMSTATE"

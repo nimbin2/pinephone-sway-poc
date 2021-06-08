@@ -1,0 +1,71 @@
+#!/usr/bin/env sh
+# modified sxmo_unlocksim.sh https://github.com/nimbin2/pinephone-sway-nimbin/blob/main/sxmo_LICENSE.md 
+
+echo "Unlock Sim"
+echo ""
+
+swayphone_keyboard_show
+
+modem_n() {
+	MODEMS="$(mmcli -L)"
+	echo "$MODEMS" | grep -oE 'Modem\/([0-9]+)' | cut -d'/' -f2
+	return
+}
+
+sim_n() {
+	SIMS="$(mmcli -m "$(modem_n)" | grep SIM)"
+	echo "$SIMS" | grep -oE 'SIM\/([0-9]+)' | cut -d'/' -f2
+	return
+}
+
+
+get_input() {
+   dialog --inputbox "Sim pin" 0 0 
+}
+
+notify_state() {
+   echo $1 
+   notify-send -t 5000 -u $2 "Sim state: $1"
+}
+
+if [ "$(swayphone_simstate)" == "registered" ]; then
+   notify_state "registered" "normal"
+   exit
+else
+retry=1
+pkill wofi #kill existing dmenu
+
+   while [ $retry -eq 1 ]; do
+      if [ $(mmcli -L | grep -c "QUECTEL Mobile Broadband Module") != "1" ]; then
+         notify-send -t 1800 "no module.."
+         sleep 1.8s
+      else
+
+         #PICKED=$(dialog --inputbox "sim pin" 0 0 2>&1 1>/dev/tty);
+			PICKED="$(
+				# shellcheck disable=SC2039,SC3037
+				echo -e "Cancel\n0000\n1234" | cat | wofi -P --width="100%" --height="34" --yoffset="210" --xoffset="0" -S dmenu -l 3 -c -p "PIN:" | tr -d "\n\r "
+			)"
+
+         if [ -n "$PICKED" ] && [ "$PICKED" != "Cancel" ]; then
+            echo $(sim_n)
+            retry=0
+            mmcli -i "$(sim_n)" --pin "$PICKED" > /tmp/unlockmsg 2>&1 || retry=1
+            MSG=$(cat /tmp/unlockmsg)
+            if echo "$MSG" | grep -qE '(not SIM-PIN locked|successfully sent PIN)'; then
+               retry=0
+               notify_state "registered" "normal"
+            else
+               notify_state "locked" "critical"
+               sleep 3s
+            fi
+         else
+            retry=0
+            notify_state "canceled" "low"
+         fi
+      fi
+   done
+fi
+echo ""
+
+

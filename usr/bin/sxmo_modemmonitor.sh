@@ -201,7 +201,7 @@ initialmodemstatus() {
 		echo registered > "$MODEMSTATEFILE"
 	elif echo "$state" | grep -q -E "^.*state:.*locked.*$"; then
 		echo locked > "$MODEMSTATEFILE"
-		pidof swayphone_unlocksim || swayphone_menu_open "swayphone_unlocksim" &
+		pidof swayphone_unlocksim || swayphone_unlocksim &
 	else
 		echo unknown > "$MODEMSTATEFILE"
 	fi
@@ -245,7 +245,7 @@ mainloop() {
 				read -r newstate
 				if echo "$newstate" | grep "int32 2"; then
 					echo locked > "$MODEMSTATEFILE"
-					pidof swayphone_unlocksim || swayphone_menu_open "swayphone_unlocksim" &
+					pidof swayphone_unlocksim || swayphone_unlocksim &
 				elif echo "$newstate" | grep "int32 8"; then
 					echo registered > "$MODEMSTATEFILE"
 					checkforfinishedcalls
@@ -272,7 +272,7 @@ mainloop() {
 
 
 echo "sxmo_modemmonitor: starting -- $(date)" >&2
-swayphone_menu_open "swayphone_unlocksim"
+swayphone_unlocksim
 rm -f "$CACHEDIR"/*.pickedupcall 2>/dev/null #new session, forget all calls we picked up previously
 mainloop
 echo "sxmo_modemmonitor: exiting -- $(date)" >&2
