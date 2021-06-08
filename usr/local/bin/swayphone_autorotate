@@ -1,0 +1,42 @@
+#!/bin/bash
+DEGREE=$1
+ROTATONLOG="/tmp/swayphone_isrotated"
+GRAVITY="16374"
+THRESHOLD="400"
+POLL_TIME=1
+RIGHT_SIDE_UP="$(echo "$GRAVITY - $THRESHOLD" | bc)"
+UPSIDE_DOWN="$(echo "-$GRAVITY + $THRESHOLD" | bc)"
+FILE_X="$(find /sys/bus/iio/devices/iio:device*/ -iname in_accel_x_raw)"
+FILE_Y="$(find /sys/bus/iio/devices/iio:device*/ -iname in_accel_y_raw)"
+
+echo "" > $ROTATONLOG
+
+# Rotate depending on sensor
+rotate_sway() {
+   getrotation=$(cat $ROTATONLOG)
+   y_raw="$(cat "$FILE_Y")"
+   x_raw="$(cat "$FILE_X")"
+   if  [ "$x_raw" -ge "$RIGHT_SIDE_UP" ] && [ "$getrotation" != "norm" ]; then
+      echo "norm" > $ROTATONLOG
+      swaymsg output DSI-1 transform 0
+   elif [ "$y_raw" -le "$UPSIDE_DOWN" ] && [ "$getrotation" != "left" ]; then
+      echo "left" > $ROTATONLOG
+      swaymsg output DSI-1 transform 90
+   elif [ "$y_raw" -ge "$RIGHT_SIDE_UP" ] && [ "$getrotation" != "right" ]; then
+      echo "right" > $ROTATONLOG
+      swaymsg output DSI-1 transform 270
+   fi
+}
+
+# Rotation loop if no rotete_* argument
+rotate_sway_loop() {
+   while true; do
+      rotate_sway
+      sleep "$POLL_TIME"
+   done
+}
+
+# Execute command 
+echo $1 | grep -q "rotate_" && 
+   swaymsg output DSI-1 transform $(echo $1 | sed "s/rotate_//") ||
+   rotate_sway_loop
