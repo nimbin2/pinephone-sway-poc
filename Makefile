@@ -6,7 +6,7 @@ YELLOW=\033[1;33m
 GREEN=\033[0;32m
 NC=\033[0m
 
-REQUIRED_PACKAGES=sway waybar bemenu swaylock swayidle squeekboard bash dialog tzdata networkmanager htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
+REQUIRED_PACKAGES=sway waybar wofi swaylock swayidle squeekboard bash dialog tzdata networkmanager htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
 REQUIRED_PACKAGES_USER_COMPONENTS=networkmanager htop pavucontrol
 REQUIRED_PACKAGES_BUILD_TOOLS=git make meson ninja cargo linux-headers libinput-dev eudev-dev
 REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
@@ -14,8 +14,9 @@ REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cm
 INSTALL_PACMAN_Y=sudo pacman --needed -Sy
 INSTALL_PACMAN=sudo pacman --needed -S
 
-FILES_SWAY=usr/local/bin/swayphone_* home/config/sway/config home/config/swayphone/menuoptions*
+FILES_SWAY=usr/local/bin/swayphone_* home/config/sway/config home/config/swayphone/menuoptions* 
 FILES_WAYBAR=home/config/waybar/config*
+FILES_WOFI=/wofi/style.css
 FILES_HTOP=home/config/htop/*
 FILES_SXMO=usr/bin/sxmo_* usr/share/sxmo/alsa/default_alsa_sound.conf
 FILES_NETWORK=usr/local/bin/togglewifi.sh usr/local/bin/togglemobileconnection.sh
@@ -75,6 +76,10 @@ install_waybar:
 	@echo -e "${GREEN}Run install_waybar${NC}"
 	./copyfile.sh "install" "${FILES_WAYBAR}"
 
+install_wofi:
+	@echo -e "${GREEN}Run install_wofi${NC}"
+	./copyfile.sh "install" "${FILES_WOFI}"
+
 install_htop:
 	@echo -e "${GREEN}Run install_htop${NC}"
 	./copyfile.sh "install" "${FILES_HTOP}"
@@ -130,6 +135,9 @@ fetch_sway:
 
 fetch_waybar:
 	./copyfile.sh "fetch" "${FILES_WAYBAR}"
+
+fetch_wofi:
+	./copyfile.sh "fetch" "${FILES_WOFI}"
 
 fetch_sxmo:
 	./copyfile.sh "fetch" "${FILES_SXMO}"
