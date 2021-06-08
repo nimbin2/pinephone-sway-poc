@@ -2,4 +2,5 @@ Sound =$ reload_menu menuselect_sound
 Network =$ reload_menu menuselect_network
 Contact =$ reload_menu menuselect_contact
 Apps =$ reload_menu menuselect_apps
+Alarm =$ birdie
 Settings =$ reload_menu menuselect_settings

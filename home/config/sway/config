@@ -17,10 +17,12 @@ set $right l
 # Your preferred terminal emulator
 set $term termite
 
+
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu bemenu-run -n -p RUN | xargs swaymsg exec --
+#set $menu bemenu-run -n -p RUN | xargs swaymsg
+set $menu dmenu_path | wofi --width="90%" --height="54%" --show drun -i | xargs swaymsg exec --
 
 
 set $cl_high #566a80
