@@ -16,7 +16,7 @@ INSTALL_PACMAN=sudo pacman --needed -S
 
 FILES_SWAY=usr/local/bin/swayphone_* home/config/sway/config home/config/swayphone/menuoptions* 
 FILES_WAYBAR=home/config/waybar/config*
-FILES_WOFI=/wofi/style.css
+FILES_WOFI=home/config/wofi/style.css
 FILES_HTOP=home/config/htop/*
 FILES_SXMO=usr/bin/sxmo_* usr/share/sxmo/alsa/default_alsa_sound.conf
 FILES_NETWORK=usr/local/bin/togglewifi.sh usr/local/bin/togglemobileconnection.sh
@@ -128,7 +128,7 @@ install_services:
 ###
 # FETCH
 ###
-fetch: fetch_sway fetch_waybar fetch_waybar fetch_sxmo fetch_services fetch_termite fetch_network fetch_keyboard
+fetch: fetch_sway fetch_waybar fetch_wofi fetch_sxmo fetch_services fetch_termite fetch_network fetch_keyboard
 
 fetch_sway:
 	./copyfile.sh "fetch" "${FILES_SWAY}"

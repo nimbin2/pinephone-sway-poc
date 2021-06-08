@@ -1,0 +1,30 @@
+window {
+font-size: 21px;
+margin: 0;
+border: 0;
+}
+
+#input {
+margin: 0;
+border: 0;
+}
+
+#inner-box {
+margin: 0;
+border: 0;
+}
+
+#outer-box {
+margin: 0;
+border: 0;
+}
+
+#scroll {
+margin: 0;
+border: 0;
+}
+
+#entry {
+padding: 12px;
+border-bottom: 1px solid #B3CDE0;
+}
