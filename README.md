@@ -15,6 +15,12 @@ So maybe some scripts just work with thoose in the backpack..
 
 Actually the dialer and sms script work with vis-menu, sou you'll get a terminal window with a list of your contacts (~/.config/sxmo/contacts.tsv) to choose.
 
+### Installation
+```
+git clone --recursive https://github.com/nimbin2/pinephone-sway-poc.git
+cd pinephone-sway-poc && make install
+```
+
 ### Make file
 Please read through the Make file and change it to your needs.
 Make sure to install Dejvino's sway poc first.
