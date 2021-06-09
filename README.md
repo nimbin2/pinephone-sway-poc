@@ -16,6 +16,14 @@ So maybe some scripts just work with thoose in the backpack..
 Actually the dialer and sms script work with vis-menu, sou you'll get a terminal window with a list of your contacts (~/.config/sxmo/contacts.tsv) to choose.
 
 ### Installation
+#### Install encrypted Arch Linux arm 
+```
+git clone https://github.com/dreemurrs-embedded/archarm-mobile-fde-installer.git
+cd archarm-mobile-fde-installer && ./installer.sh
+```
+
+#### Install SwayPinephone
+You may want to change the make file to your needs (like changing the package manager if you dont use Arch Linux).
 ```
 git clone --recursive https://github.com/nimbin2/pinephone-sway-poc.git
 cd pinephone-sway-poc && make install
