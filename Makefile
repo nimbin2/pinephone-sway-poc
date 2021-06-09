@@ -92,8 +92,8 @@ install_lightdm:
 install_pptk:
 	@echo -e "${GREEN}Run install_pptk${NC}"
 	cd pinephone-toolkit && meson build 
-	ninja -C pinephone-toolkit/build
-	ninja -C pinephone-toolkit/build install
+	sudo ninja -C pinephone-toolkit/build
+	sudo ninja -C pinephone-toolkit/build install
 
 install_lisgd:
 	@echo -e "${GREEN}Run install_lisdg${NC}"
