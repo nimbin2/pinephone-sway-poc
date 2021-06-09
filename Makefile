@@ -24,7 +24,6 @@ FILES_TERMITE=home/config/termite/config_menu
 FILES_KEYBOARD=home/config/squeekboard/keyboards/us* home/local/share/squeekboard/keyboards/us*
 FILES_SERVICES=home/config/systemd/user/sxmo_* home/config/systemd/user/swayphone_autorotate.service home/config/systemd/user/sway-session.target  
 FILES_LIGHTDM=usr/share/wayland-sessions/*
-FILES_LISDG=lisgd/lisgd
 
 help:
 	@echo " Available Actions:"
@@ -100,7 +99,7 @@ install_lisgd:
 	cd lisgd && git fetch origin && git reset --hard 877beea2738df5f3a99da3f4e2ab5442b92baa80
 	cd lisgd && git apply ../patches/lisgd.patch
 	cd lisgd && make
-	./copyfile.sh "install" "${FILES_LISDG}"
+	sudo cp lisgd/lisgd /usr/local/bin/
 
 install_sxmo:
 	@echo -e "${GREEN}Run install_sxmo${NC}"
