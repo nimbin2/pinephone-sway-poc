@@ -40,7 +40,7 @@
         "format": " {:%e %b %Y}", // Icon: calendar-alt
         //"tooltip-format": "{:%e %B %Y}"
         "tooltip": true,
-	"on-click": "swayphone_menu_open swayphone_menuselect"
+	"on-click": "swayphone_appmenu"
     },
 
     "battery": {

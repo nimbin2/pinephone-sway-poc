@@ -1,0 +1,174 @@
+#!/bin/bash
+#trap gracefulexit INT TERM
+
+# include common definitions
+# shellcheck source=scripts/core/sxmo_common.sh
+. "/usr/bin/sxmo_common.sh"
+
+WINAME=Sys
+gracefulexit() {
+	echo "Gracefully exiting $0">&2
+	kill -9 0
+}
+
+quit() {
+	exit 0
+}
+
+programchoicesinit() {
+   #WMCLASS="$(swaymsg -t get_tree | jq '.. | (.nodes? // empty)[] | select(.focused==true) | {name}.name')" 
+   WMCLASS="$@" 
+	if echo "$WMCLASS" | grep -w "scripts"; then
+      CHOICES="
+         $icon_mic Record          ^ 0 ^ sxmo_record.sh
+         $icon_red Reddit          ^ 0 ^ sxmo_reddit.sh
+         $icon_rss RSS             ^ 0 ^ sxmo_rss.sh
+         $(command -v scrot	>/dev/null && echo $icon_cam Screenshot			^ 0 ^ sxmo_screenshot.sh || notify-send failed to take a screenshot)
+         $(command -v scrot	>/dev/null && echo $icon_cam Screenshot \(selection\)	^ 0 ^ sxmo_screenshot.sh selection || notify-send failed to take a screenshot)
+         $icon_tmr Timer           ^ 0 ^ sxmo_timer.sh
+         $icon_ytb Youtube         ^ 0 ^ sxmo_youtube.sh video
+         $icon_ytb Youtube (Audio) ^ 0 ^ sxmo_youtube.sh audio
+         $icon_glb Web Search      ^ 0 ^ sxmo_websearch.sh
+         $icon_wtr Weather         ^ 0 ^ sxmo_weather.sh
+      " 
+		WINNAME=Scripts
+   elif echo "$WMCLASS" | grep -w "applications"; then
+      CHOICES="
+         $(command -v termite       >/dev/null && echo "$icon_eml Termite        ^ 0 ^ termite")
+         $(command -v cmus          >/dev/null && echo "$icon_mus Cmus           ^ 0 ^ termite -e cmus")
+         $(command -v qutebrowser   >/dev/null && echo "$icon_glb Qutebrowser    ^ 0 ^ qutebrowser")
+         $(command -v firefox       >/dev/null && echo "$icon_ffx Firefox        ^ 0 ^ firefox")
+         $(command -v calcurse      >/dev/null && echo "$icon_clk Calcurse       ^ 0 ^ termite -e calcurse")
+         $(command -v megapixels    >/dev/null && echo "$icon_cam Camera         ^ 0 ^ GDK_SCALE=2 megapixels")
+         $(command -v imv           >/dev/null && echo "$icon_cam Photos         ^ 0 ^ imv $HOME/Pictures/*.jpg")
+      "
+		WINNAME=Applications
+   elif echo "$WMCLASS" | grep -w "contact"; then
+      CHOICES="
+         $(command -v telegram-desktop >/dev/null && echo "$icon_tgm Telegram    ^ 0 ^ telegram-desktop")
+         $icon_msg Sms                                                           ^ 0 ^ sxmo_modemtext.sh
+         $icon_phn Dialer                                                        ^ 0 ^ sxmo_modemdial.sh
+         $icon_usr Contacts                                                      ^ 0 ^ sxmo_contactmenu.sh
+         $icon_phl Modem Log                                                     ^ 0 ^ sxmo_modemlog.sh
+
+      "
+		WINNAME=Contact
+   elif echo "$WMCLASS" | grep -w "network"; then
+      CHOICES="
+         Toggle gsm     ^ 0 ^ sudo togglemobileconnection.sh
+         Toggle wifi    ^ 0 ^ sudo togglewifi.sh
+      "
+		WINNAME=Network
+   elif echo "$WMCLASS" | grep -w "config"; then
+      CHOICES="
+         $icon_fll Flashlight $(
+				grep -qE '^0$' /sys/class/leds/white:flash/brightness &&
+				printf %b "Off → On" ||  printf %b "On → Off";
+				printf %b "^ 1 ^ sudo sxmo_flashtoggle.sh"
+			)
+         Unlock sim          ^ 0 ^ swayphone_unlocksim
+         $icon_rld Reboot    ^ 0 ^ reboot
+			$icon_pwr Poweroff  ^ 0 ^ poweroff
+      "
+		WINNAME=Audio
+	elif echo "$WMCLASS" | grep -i "audioout"; then
+		# Audio Out menu
+		CURRENTDEV="$(sxmo_audiocurrentdevice.sh)"
+		CHOICES="
+			$icon_hdp Headphones $([ "$CURRENTDEV" = "Headphone" ] && echo "$icon_chk") ^ 1 ^ sxmo_audioout.sh Headphones
+			$icon_spk Speaker $([ "$CURRENTDEV" = "Line Out" ] && echo "$icon_chk")     ^ 1 ^ sxmo_audioout.sh Speaker
+			$icon_phn Earpiece $([ "$CURRENTDEV" = "Earpiece" ] && echo "$icon_chk")    ^ 1 ^ sxmo_audioout.sh Earpiece
+			$icon_mut None $([ "$CURRENTDEV" = "None" ] && echo "$icon_chk")            ^ 1 ^ sxmo_audioout.sh None
+			$icon_aru Volume up                                       ^ 1 ^ sxmo_vol.sh up
+			$icon_ard Volume down                                     ^ 1 ^ sxmo_vol.sh down
+		"
+		WINNAME=Audio
+	else
+		# Default system menu (no matches)
+		CHOICES="
+			$icon_mus Audio                                              ^ 0 ^ swayphone_appmenu audioout
+			$icon_grd Apps                                               ^ 0 ^ swayphone_appmenu applications
+			$icon_grd Scripts                                            ^ 0 ^ swayphone_appmenu scripts
+			$icon_phn Dialer                                             ^ 0 ^ sxmo_modemdial.sh
+			$icon_msg Texts                                              ^ 0 ^ sxmo_modemtext.sh
+			$icon_usr Contacts                                           ^ 0 ^ sxmo_contactmenu.sh
+			$(command -v bluetoothctl >/dev/null && echo "$icon_bth Bluetooth ^ 0 ^ sxmo_bluetoothmenu.sh")
+			$(command -v megapixels >/dev/null && echo "$icon_cam Camera ^ 0 ^ GDK_SCALE=2 megapixels")
+			$icon_net Networks                                           ^ 0 ^ swayphone_appmenu network
+			$(command -v gnome-maps >/dev/null && echo "$icon_gps Maps   ^ 0 ^ gnome-maps")
+			$icon_cfg Config                                             ^ 0 ^ swayphone_appmenu config
+		"
+		WINNAME=Sys
+   fi
+}
+
+getprogchoices() {
+	# E.g. sets CHOICES var
+	programchoicesinit "$@"
+
+
+	# For the Sys menu decorate at top with notifications if >1 notification
+	if [ "$WINNAME" = "Sys" ]; then
+		NNOTIFICATIONS="$(find "$NOTIFDIR" -type f | wc -l)"
+		if [ "$NNOTIFICATIONS" -gt 0 ]; then
+			CHOICES="
+				$icon_bel Notifications ($NNOTIFICATIONS) ^ 0 ^ sxmo_notificationsmenu.sh
+				$CHOICES
+			"
+		fi
+	fi
+
+	#shellcheck disable=SC2044
+	for NOTIFFILE in $(find "$NOTIFDIR" -name 'incomingcall*_notification'); do
+		NOTIFACTION="$(head -n1 "$NOTIFFILE")"
+		MESSAGE="$(tail -1 "$NOTIFFILE")"
+		CHOICES="
+			$icon_phn $MESSAGE ^ 0 ^ $NOTIFACTION
+			$CHOICES
+		"
+		break
+	done
+
+	# Decorate menu at bottom w/ system menu entry if not system menu
+	echo $WINNAME | grep -v Sys && CHOICES="
+		$CHOICES
+		$icon_mnu System Menu   ^ 0 ^ swayphone_appmenu sys
+	"
+
+	# Decorate menu at bottom w/ close menu entry
+	CHOICES="
+		$CHOICES
+		$icon_cls Close Menu    ^ 0 ^ quit
+	"
+
+	PROGCHOICES="$(echo "$CHOICES" | xargs -0 echo | sed '/^[[:space:]]*$/d' | awk '{$1=$1};1')"
+}
+
+mainloop() {
+	getprogchoices "$ARGS"
+	echo "$PROGCHOICES" |
+	cut -d'^' -f1 |
+	wofi --width="100%" --height="89%" -S dmenu -idx "$DMENUIDX" -l 16 -c -p "$WINNAME" | (
+		PICKED="$(cat)"
+		echo "$PICKED" | grep . || quit
+		LOOP="$(echo "$PROGCHOICES" | grep -m1 -F "$PICKED" | cut -d '^' -f2)"
+		CMD="$(echo "$PROGCHOICES" | grep -m1 -F "$PICKED" | cut -d '^' -f3)"
+		DMENUIDX="$(echo "$PROGCHOICES" | grep -m1 -F -n "$PICKED" | cut -d ':' -f1)"
+		echo "swayphone_appmenu: Eval: <$CMD> from picked <$PICKED> with loop <$LOOP>">&2
+		if echo "$LOOP" | grep 1; then
+			eval "$CMD"
+			mainloop
+		else
+			eval "$CMD" &
+			quit
+		fi
+	) & wait
+}
+
+#pgrep -f "$(command -v swayphone_appmenu)" | grep -Ev "^${$}$" | xargs -r kill -TERM
+pkill wofi
+swayphone_keyboard_hide
+DMENUIDX=0
+PICKED=""
+ARGS="$*"
+mainloop
