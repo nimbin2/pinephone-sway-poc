@@ -21,8 +21,18 @@ Actually the dialer and sms script work with vis-menu, sou you'll get a terminal
 git clone https://github.com/dreemurrs-embedded/archarm-mobile-fde-installer.git
 cd archarm-mobile-fde-installer && ./installer.sh
 ```
+Choose 2) Barebone as environement</br>
+Choosing f2fs as filesystem may break your sd card ( what i#ve read in a chat,- i'm using it and never had a problem)</br>
+Make sure you select the right sd card (compare size ) and you enter the right path (something like /dev/mmcblk0 )
+
 
 #### Install SwayPinephone
+Insert the sd Card.</br>
+Connect a keyboard via an usb-c hub ( or you set up bluetooth)</br>
+Set your keyboard layout ```localectl set-keymap de```</br>
+Connect to ethernet with the hub or to wifi by entering ```sudo wifi-menu```</br>
+Install required packages ```sudo pacman -Sy git make```</br>
+
 You may want to change the make file to your needs (like changing the package manager if you dont use Arch Linux).
 ```
 git clone --recursive https://github.com/nimbin2/pinephone-sway-poc.git
