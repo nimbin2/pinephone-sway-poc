@@ -59,7 +59,7 @@ help_install_packages:
 # INSTALL - USER
 ###
 
-install: install_packages install_sway install_waybar fetch_waybar install_htop install_lightdm install_pptk install_lisgd install_sxmo installl_network install_termite install_keyboard install_keyboard
+install: install_packages install_sway install_waybar install_wofi install_htop install_lightdm install_pptk install_lisgd install_sxmo installl_network install_termite install_keyboard install_keyboard
 
 install_packages: help_install_packages make_wait
 	$(INSTALL_PACMAN_Y) ${REQUIRED_PACKAGES}
