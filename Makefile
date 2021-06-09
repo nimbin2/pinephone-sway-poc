@@ -8,7 +8,7 @@ NC=\033[0m
 
 REQUIRED_PACKAGES=sway waybar wofi swaylock swayidle squeekboard bash dialog tzdata networkmanager htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
 REQUIRED_PACKAGES_USER_COMPONENTS=networkmanager htop pavucontrol
-REQUIRED_PACKAGES_BUILD_TOOLS=git make meson ninja cargo linux-headers libinput-dev eudev-dev
+REQUIRED_PACKAGES_BUILD_TOOLS=git make meson ninja cargo linux-headers libinput udev
 REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
 
 INSTALL_PACMAN_Y=sudo pacman --needed -Sy
