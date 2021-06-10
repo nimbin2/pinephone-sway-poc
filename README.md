@@ -54,18 +54,7 @@ Make sure to install Dejvino's sway poc first.
 
 
 ### Required packages
-If you just install whats listed here it's your problem^^
-```
-sudo pacman --needed -Sy alsa-utils bc rsync bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc font-noto noto-fonts-emoji noto-fonts-extra
-sudo pacman --needed -Sy noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
-```
-You should edit your sway config:
-```
-# ~/.config/sway/config
-
-...
-exec mako
-```
+Check out the Makefile, packages are defined by the variable REQUIRED_PACKAGES*
 
 ### Auto login
 If you use the encrypted arch version you can use an auto login tty and start sway from the .bash_profile over the sxmo_xinit.sh script, that should also config some maybe needed main stuff..
@@ -112,19 +101,6 @@ and enable Notificationsmonitor:
 systemctl --user enable --now sxmo_notifications.service
 ```
 
-### Autorotate
-enable sway specific daemon ( check "Modemmonitor and Notificationsmonitor") </br>
-move the File services/swayphone_autorotate.service file to ~/.config/systemd/user/</br>
-move the File swayphone/swayphone_autorotate file to /usr/local/bin/swayphone_autorotate</br>
-enable the Service:
-```
-systemctl --user enable --now swayphone_autorotate.service
-```
-you can also set the direction manually by entering something like:
-```
-swayphone_autorotate rotate_270
-```
-
 ### ModemMonitor
 I was having problems with mmcli commands, as they needed sudo rights.</br>
 I got rid of the problem by doing two things, i think just one is doing the trick, idk wich one...
@@ -156,19 +132,32 @@ YOURUSERNAME ALL=NOPASSWD:/usr/local/bin/togglewifi.sh
 To get the togglemobileconnection.sh script to work you need to add a gsm connection called "mobileconnection" (or rename "mobileconnection" in the script)</br>
 some hints you can find here: https://unix.stackexchange.com/questions/113975/configure-gsm-connection-using-nmcli
 
+### Autorotate
+enable sway specific daemon ( check "Modemmonitor and Notificationsmonitor") </br>
+move the File services/swayphone_autorotate.service file to ~/.config/systemd/user/</br>
+move the File swayphone/swayphone_autorotate file to /usr/local/bin/swayphone_autorotate</br>
+enable the Service:
+```
+systemctl --user enable --now swayphone_autorotate.service
+```
+you can also set the direction manually by entering something like:
+```
+swayphone_autorotate rotate_270
+```
 
 ### Flash light
 sxmo_flashtoggle.sh not working? add it to the sudoers file,...
 
 ### German keyboard
-rename the file de.yaml in the "other" directory to us.yaml and place it in the following two directories. (it switched sometimes back to the default layout if you just place it in the ~/config dir like recommended at the squeekboard git)</br> 
+In home/config/squeekboard/keyboards/ you can find the german layout (needs to be called us.yaml as it doesnt work otherwise).
+I recommend to use that one as it gives more options to use a terminal. It is easy to modify the layout and switch keys like y=z or remap the german umlaute. The file souhld be placed in the following two directories, as just having it in the .config dir like recommended from the squeekboard team sometimes breaks the layout.</br>
 ~/.config/squeekboard/keyboards/ </br>
 ~/.local/share/squeekboard/keyboards/
 
 ### Add a contact
 edit or add the file ~/.config/sxmo/contacts.tsv and enter a contact like
 ```
-+49000000000 My Contact
++49000000000   My Contact
 ```
 
 ### Firefox mobile friendly
@@ -181,23 +170,7 @@ sudo make DISTRO=aarch64 install
 ```
 
 ### Main menu
-Make sure you got the  the waybar config file at the right direction.
-Make sure you got the termite config file at the right direction
-```
-# move waybar config file
-mv waybar/config0 ~/.config/waybar/config_0
-# move termite config file
-mkdir -p ~/.config/termite
-mv other/config_menu .config/termite/config_menu
-```
-Add the following line to your sway config file to alwas open the dialog menu sticky and fullscreen.
-```
-# ~/.config/sway/config
-...
-for_window [app_id="^mainMenu$"] {
-	floating enable
-	border pixel 0
-	sticky enable
-}
-```
+The main menu works with wofi dmenu.</br>
+Check out the swayphone_appmenu script.</br>
+If touch does not work for you, imagine your finger is a thin needle and double tap the option^^
 
