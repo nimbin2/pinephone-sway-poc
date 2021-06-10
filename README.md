@@ -77,14 +77,6 @@ if [ -z $DISPLAY ] && [ "$(tty)" == "/dev/tty1" ]; then
 fi
 ```
 
-### Set sim pin
-To get asked for sim pin after login edit your sway config file
-```
-# ~/.config/sway/config
-...
-exec '[[ "$(swayphone_simstate)" == "registered" ]] && notify-send -t 5000 "Sim is registered" || termite -e swayphone_unlocksim'
-```
-
 ### Modemmonitor and Notificationsmonitor
 Enable sway specific daemons like recommended in the wiki
 https://wiki.archlinux.org/title/Sway#Manage_Sway-specific_daemons_with_systemd
