@@ -8,7 +8,7 @@ TERMMODE=$([ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && echo "true")
 
 err() {
 	echo "$1">&2
-	echo "$1" | wofi --width="90%" --height="54%" -S dmenu -c -l 10
+	echo "$1" | wofi --width="100%" --height="54%" -S dmenu -c -l 10
 	kill $$
 }
 
@@ -64,7 +64,7 @@ sendtextmenu() {
 	do
 		CONFIRM="$(
 			printf %b "$icon_edt Edit\n$icon_snd Send\n$icon_cls Cancel" |
-			wofi --width="90%" --height="54%" -S dmenu -c -idx 1 -p "Confirm" -l 10
+			wofi --width="100%" --height="54%" -S dmenu -c -idx 1 -p "Confirm" -l 10
 		)" || exit
 		if echo "$CONFIRM" | grep -q "Send"; then
 			(sxmo_modemsendsms.sh "$NUMBER" - < "$DRAFT") && \
@@ -96,7 +96,7 @@ readtextmenu() {
 			printf %b "$CONTACT" | xargs -IL echo "L logfile"
 		done
 	)"
-	PICKED="$(printf %b "$ENTRIES" | wofi --width="90%" --height="54%" -S dmenu -p Texts -c -l 10 -i)" || exit
+	PICKED="$(printf %b "$ENTRIES" | wofi --width="100%" --height="54%" -S dmenu -p Texts -c -l 10 -i)" || exit
 
 	if echo "$PICKED" | grep "Close Menu"; then
 		exit 1
