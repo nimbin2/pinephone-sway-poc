@@ -108,8 +108,8 @@ input * {
     # Start your launcher
     bindsym $mod+d exec $menu
 
-    bindsym XF86AudioRaiseVolume exec button_volume up
-    bindsym XF86AudioLowerVolume exec $term
+    bindsym XF86AudioRaiseVolume exec swayphone_button_volume up
+    bindsym XF86AudioLowerVolume exec swayphone_button_volume down
     bindsym XF86MonBrightnessDown  exec sxmo_vol.sh down
     bindsym XF86MonBrightnessUp  exec sxmo_vol.sh up
 

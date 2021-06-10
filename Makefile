@@ -8,7 +8,7 @@ NC=\033[0m
 
 REQUIRED_PACKAGES=linux sway waybar wofi swaylock swayidle squeekboard bash dialog tzdata networkmanager htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
 REQUIRED_PACKAGES_USER_COMPONENTS=networkmanager htop pavucontrol
-REQUIRED_PACKAGES_BUILD_TOOLS=git make gcc meson ninja cargo linux-headers libinput udev
+REQUIRED_PACKAGES_BUILD_TOOLS=base-devel git make gcc meson ninja cargo linux-headers libinput udev
 REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
 
 INSTALL_PACMAN_Y=sudo pacman --needed -Sy
@@ -24,6 +24,7 @@ FILES_TERMITE=home/config/termite/config_menu
 FILES_KEYBOARD=home/config/squeekboard/keyboards/us* home/local/share/squeekboard/keyboards/us*
 FILES_SERVICES=home/config/systemd/user/sxmo_* home/config/systemd/user/swayphone_autorotate.service home/config/systemd/user/sway-session.target  
 FILES_LIGHTDM=usr/share/wayland-sessions/*
+FILES_FONTCONFIG=home/config/fontconfig/conf.d/30-family-defaults.conf
 
 help:
 	@echo " Available Actions:"
@@ -58,7 +59,7 @@ help_install_packages:
 # INSTALL - USER
 ###
 
-install: install_packages install_sway install_waybar install_wofi install_htop install_lightdm install_pptk install_lisgd install_sxmo installl_network install_termite install_keyboard install_keyboard
+install: install_packages install_sway install_waybar install_wofi install_htop install_lightdm install_pptk install_lisgd install_sxmo installl_network install_termite install_keyboard install_keyboard install_fontconfig
 
 install_packages: help_install_packages make_wait
 	$(INSTALL_PACMAN_Y) ${REQUIRED_PACKAGES}
@@ -117,6 +118,10 @@ install_keyboard:
 	@echo -e "${GREEN}Run install_keyboard${NC}"
 	./copyfile.sh "install" "${FILES_KEYBOARD}"
 
+install_fontconfig:
+	@echo -e "${GREEN}Run install_keyboard${NC}"
+	./copyfile.sh "install" "${FILES_FONTCONFIG}"
+
 install_services:
 	@echo -e "${GREEN}Run install_services${NC}"
 	./copyfile.sh "install" "${FILES_SERVICES}"
@@ -127,7 +132,7 @@ install_services:
 ###
 # FETCH
 ###
-fetch: fetch_sway fetch_waybar fetch_wofi fetch_sxmo fetch_services fetch_termite fetch_network fetch_keyboard
+fetch: fetch_sway fetch_waybar fetch_wofi fetch_sxmo fetch_services fetch_termite fetch_network fetch_keyboard fetch_fontconfig
 
 fetch_sway:
 	./copyfile.sh "fetch" "${FILES_SWAY}"
@@ -152,4 +157,7 @@ fetch_termite:
 
 fetch_keyboard:
 	./copyfile.sh "fetch" "${FILES_KEYBOARD}"
+
+fetch_fontconfig:
+	./copyfile.sh "fetch" "${FILES_FONTCONFIG}"
 

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+WMNAME=$(swaymsg -t get_tree | jq '.. | (.nodes? // empty)[] | select(.focused==true) | {name}.name')
+
+BUTTON=$1
+
+echo $BUTTON
+up() {
+   echo "huu: $WMNAME"
+   if echo "$WMNAME" | grep -qE '\- YouTube |cmus'; then
+      sxmo_vol.sh up
+   else
+      swayphone_appmenu & disown
+   fi
+}
+down() {
+   if echo "$WMNAME" | grep -qE '\- YouTube |cmus'; then
+      sxmo_vol.sh down
+   else
+      swayphone_keyboard_show && termite & disown
+   fi
+}
+
+"$@"

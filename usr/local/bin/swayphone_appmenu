@@ -1,5 +1,8 @@
 #!/bin/bash
-#trap gracefulexit INT TERM
+# modified sxmo_appmenu.sh script
+# https://git.sr.ht/~mil/sxmo-utils/tree/1.4.1/item/scripts/core/sxmo_appmenu.sh
+
+trap gracefulexit INT TERM
 
 # include common definitions
 # shellcheck source=scripts/core/sxmo_common.sh
@@ -35,7 +38,7 @@ programchoicesinit() {
    elif echo "$WMCLASS" | grep -w "applications"; then
       CHOICES="
          $(command -v termite       >/dev/null && echo "$icon_eml Termite        ^ 0 ^ termite")
-         $(command -v cmus          >/dev/null && echo "$icon_mus Cmus           ^ 0 ^ termite -e cmus")
+         $(command -v cmus          >/dev/null && echo "$icon_mus Cmus           ^ 0 ^ termite --title=\"cmus\" -e cmus")
          $(command -v qutebrowser   >/dev/null && echo "$icon_glb Qutebrowser    ^ 0 ^ qutebrowser")
          $(command -v firefox       >/dev/null && echo "$icon_ffx Firefox        ^ 0 ^ firefox")
          $(command -v calcurse      >/dev/null && echo "$icon_clk Calcurse       ^ 0 ^ termite -e calcurse")
@@ -148,7 +151,7 @@ mainloop() {
 	getprogchoices "$ARGS"
 	echo "$PROGCHOICES" |
 	cut -d'^' -f1 |
-	wofi --width="100%" --height="89%" -S dmenu -idx "$DMENUIDX" -l 16 -c -p "$WINNAME" | (
+	wofi --width="100%" --height="60%" -S dmenu -idx "$DMENUIDX" -l 16 -c -p "$WINNAME" | (
 		PICKED="$(cat)"
 		echo "$PICKED" | grep . || quit
 		LOOP="$(echo "$PROGCHOICES" | grep -m1 -F "$PICKED" | cut -d '^' -f2)"
