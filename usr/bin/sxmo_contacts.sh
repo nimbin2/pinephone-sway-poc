@@ -43,9 +43,10 @@ called_contacts() {
 }
 
 all_contacts() {
-	awk -F'\t' '{
-		print $1 ": " $2
-	}' "$CONTACTSFILE" | sort -f -k 2
+	awk '{
+		print $1 ": " $2 " " $3 " " $4 " " $5 " " $6
+	}' "$CONTACTSFILE" 
+	#}' "$CONTACTSFILE" | sort -f -k 2
 }
 
 unknown_contacts() {
