@@ -6,7 +6,7 @@ modem_n() {
 	return
 }
 
-SIMSTATE="$(mmcli -m "$(modem_n)" | grep -m 1 "state: "  | awk  '{print $3}')"
+SIMSTATE="$(mmcli -m "$(modem_n)" | grep -m 1 "state: " | head -n1 | awk  '{print $NF}' | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")"
 message_simstate() {
 	notify-send -t 5000 "Sim is $SIMSTATE"
 }

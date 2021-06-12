@@ -1,11 +1,6 @@
 #!/usr/bin/env sh
 # modified sxmo_unlocksim.sh https://github.com/nimbin2/pinephone-sway-nimbin/blob/main/sxmo_LICENSE.md 
 
-echo "Unlock Sim"
-echo ""
-
-swayphone_keyboard_show
-
 modem_n() {
 	MODEMS="$(mmcli -L)"
 	echo "$MODEMS" | grep -oE 'Modem\/([0-9]+)' | cut -d'/' -f2
@@ -18,23 +13,26 @@ sim_n() {
 	return
 }
 
-
-get_input() {
-   dialog --inputbox "Sim pin" 0 0 
-}
-
 notify_state() {
-   echo $1 
-   notify-send -t 5000 -u $2 "Sim state: $1"
+   [[ "$(swayphone_simstate)" == "failed" ]] &&
+      notify-send -t 5000 -u critical "Sim state: $(swayphone_simstate)" ||
+      notify-send -t 5000 -u low "Sim state: $(swayphone_simstate)"
 }
 
+
+notify-send -t 1800 "Unlock Sim"
 if [ "$(swayphone_simstate)" == "registered" ]; then
-   notify_state "registered" "normal"
+   notify_state
+   exit
+elif [ "$(swayphone_simstate)" == "failed" ]; then
+   notify_state
    exit
 else
-retry=1
-pkill wofi #kill existing dmenu
+   pkill wofi #kill existing dmenu
+   systemctl --user start sxmo_modemmonitor.service
+   swayphone_keyboard_show
 
+   retry=1
    while [ $retry -eq 1 ]; do
       if [ $(mmcli -L | grep -c "QUECTEL Mobile Broadband Module") != "1" ]; then
          notify-send -t 1800 "no module.."
@@ -52,20 +50,20 @@ pkill wofi #kill existing dmenu
             retry=0
             mmcli -i "$(sim_n)" --pin "$PICKED" > /tmp/unlockmsg 2>&1 || retry=1
             MSG=$(cat /tmp/unlockmsg)
+            notify_state
             if echo "$MSG" | grep -qE '(not SIM-PIN locked|successfully sent PIN)'; then
                retry=0
-               notify_state "registered" "normal"
             else
-               notify_state "locked" "critical"
                sleep 3s
             fi
          else
             retry=0
-            notify_state "canceled" "low"
+            notify_state
+            systemctl --user stop sxmo_modemmonitor.service
+            notify-send -u critical -t 1800 "Modemmonitor stopped"
          fi
       fi
    done
 fi
-echo ""
 
 
