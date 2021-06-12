@@ -10,7 +10,9 @@ up() {
    if echo "$WMNAME" | grep -qE '\- YouTube |cmus'; then
       sxmo_vol.sh up
    else
-      swayphone_appmenu & disown
+      pgrep swayphone_appme && 
+         pkill swayphone_appme ||
+         swayphone_appmenu & disown
    fi
 }
 down() {
