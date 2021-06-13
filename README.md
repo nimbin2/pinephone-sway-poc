@@ -13,7 +13,6 @@ I'm using Dejvino's sway poc: https://github.com/Dejvino/pinephone-sway-poc
 And dreemurrs Arch linux distro: https://github.com/dreemurrs-embedded/Pine64-Arch/releases
 So maybe some scripts just work with thoose in the backpack..
 
-Actually the dialer and sms script work with vis-menu, sou you'll get a terminal window with a list of your contacts (~/.config/sxmo/contacts.tsv) to choose.
 
 ### Installation
 #### Install encrypted Arch Linux arm 
