@@ -11,16 +11,17 @@ valid_number() {
 	else
 		notify-send "\"$number\" is not a valid phone number"
 		notify-send "Valid format is \"+[0-9]{11}\""
+      echo "exit"
 	fi
 }
 
 newcontact() {
 	name="$(echo | sxmo_dmenu_with_kb.sh -c -l 2 -p "$icon_usr Name")"
 	number=
-   echo "Number:"
 	while [ -z "$number" ]; do
-		number="$(sxmo_contacts.sh --unknown | sxmo_dmenu_with_kb.sh -c -l 10 -p "$icon_phl Number")"
+		number="$(sxmo_contacts.sh --unknown | sxmo_dmenu_with_kb.sh -t -c -l 10 -p "$icon_phl Number")"
 		number="$(valid_number "$number")"
+      [[ "$number" == "exit" ]] && exit
 	done
 
 	PICKED="$number	$name" # now act like if we picked this new contact
@@ -55,7 +56,7 @@ editcontactnumber() {
 	while [ -z "$PICKED" ]; do
 		PICKED="$(
 			echo "$ENTRIES" |
-			sxmo_dmenu_with_kb.sh -c -l 10 -p "$icon_edt Edit Contact"
+			sxmo_dmenu_with_kb.sh -t -c -l 10 -p "$icon_edt Edit Contact"
 		)"
 		if echo "$PICKED" | grep -q "(Old number)$"; then
 			editcontact "$1"
@@ -76,7 +77,7 @@ deletecontact() {
 	ENTRIES="$(printf "$icon_cls No\n$icon_chk Yes")"
 	PICKED="$(
 		echo "$ENTRIES" |
-		dmenu -c -l 3 -p "$icon_del Delete $name ?"
+		wofi -S dmenu -c -l 3 -p "$icon_del Delete $name ?"
 	)"
 
 	echo "$PICKED" | grep -q "Yes" && sed -i "/^$1$/d" "$CONTACTFILE"
@@ -89,7 +90,7 @@ editcontact() {
 
 	PICKED="$(
 		echo "$ENTRIES" |
-		dmenu -c -l 4 -p "$icon_edt Edit Contact"
+		wofi -S dmenu -c -l 4 -p "$icon_edt Edit Contact"
 	)"
 
 	if echo "$PICKED" | grep -q "Name: "; then
@@ -108,7 +109,7 @@ showcontact() {
 
 	PICKED="$(
 		echo "$ENTRIES" |
-		dmenu -c -l 5 -p "$icon_usr $name"
+		wofi -S dmenu -c -l 6 -p "$icon_usr $name"
 	)"
 
 	if echo "$PICKED" | grep -q "List Messages"; then

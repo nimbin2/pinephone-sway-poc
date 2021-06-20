@@ -26,7 +26,7 @@ finish() {
 		notify-send "$1"
 	fi
 	[ -n "$LOCKPID" ] && kill "$LOCKPID"
-#	pkill -9 dmenu
+	pkill -9 wofi
 	exit 1
 }
 
@@ -113,6 +113,7 @@ acceptcall() {
 	)"
 	if [ "$DIRECTION" = "outgoing" ]; then
 		modem_cmd_errcheck -m "$(modem_n)" -o "$CALLID" --start
+		touch "$CACHEDIR/${CALLID}.initiatedcall" #this signals that we started this call
 		log_event "call_start" "$CALLID"
 		echo "sxmo_modemcall: Started call $CALLID">&2
 	elif [ "$DIRECTION" = "incoming" ]; then
@@ -228,8 +229,8 @@ dtmfmenu() {
 }
 
 pickup() {
-	acceptcall "$1" &> /dev/null
-	incallsetup "$1" &> /dev/null
+	acceptcall "$1"
+	incallsetup "$1"
 	incallmenuloop "$1"
 }
 
@@ -247,9 +248,6 @@ incomingcallmenu() {
 	NUMBER=$(vid_to_number "$1")
 	CONTACTNAME=$(number_to_contactname "$NUMBER")
 
-	# wait for sxmo to be unlocked to display menus
-	# while pgrep sxmo_screenlock > /dev/null; do sleep 0.3; done
-   echo $NUMBER
 	PICKED="$(
 		printf %b "$icon_phn Pickup\n$icon_phx Hangup\n$icon_mut Mute\n" |
       wofi --width="100%" --height="54%" -S dmenu -c -l 5 -p "$CONTACTNAME"
