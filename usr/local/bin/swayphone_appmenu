@@ -39,11 +39,16 @@ programchoicesinit() {
       CHOICES="
          $(command -v termite       >/dev/null && echo "$icon_eml Termite        ^ 0 ^ termite")
          $(command -v cmus          >/dev/null && echo "$icon_mus Cmus           ^ 0 ^ termite --title=\"cmus\" -e cmus")
-         $(command -v qutebrowser   >/dev/null && echo "$icon_glb Qutebrowser    ^ 0 ^ qutebrowser")
-         $(command -v firefox       >/dev/null && echo "$icon_ffx Firefox        ^ 0 ^ firefox")
+         $(command -v qutebrowser   >/dev/null && echo "$icon_glb Qutebrowser    ^ 0 ^ swayphone_keyboard_show && qutebrowser")
+         $(command -v epiphany      >/dev/null && echo "$icon_glb Epiphany       ^ 0 ^ epiphany")
+         $(command -v firefox       >/dev/null && echo "$icon_ffx Firefox        ^ 0 ^ swayphone_keyboard_show && firefox")
+         $(command -v freetube      >/dev/null && echo "$icon_cam Youtube        ^ 0 ^ freetube")
          $(command -v calcurse      >/dev/null && echo "$icon_clk Calcurse       ^ 0 ^ termite -e calcurse")
+         $(command -v geary         >/dev/null && echo "$icon_eml Mail           ^ 0 ^ swayphone_keyboard_show && geary")
          $(command -v megapixels    >/dev/null && echo "$icon_cam Camera         ^ 0 ^ GDK_SCALE=2 megapixels")
          $(command -v imv           >/dev/null && echo "$icon_cam Photos         ^ 0 ^ imv $HOME/Pictures/*.jpg")
+			$(command -v gnome-maps    >/dev/null && echo "$icon_gps Maps           ^ 0 ^ gnome-maps")
+			$(command -v gnome-weather >/dev/null && echo "$icon_gps Weather        ^ 0 ^ gnome-weather")
       "
 		WINNAME=Applications
    elif echo "$WMCLASS" | grep -w "contact"; then
@@ -98,7 +103,6 @@ programchoicesinit() {
 			$(command -v bluetoothctl >/dev/null && echo "$icon_bth Bluetooth ^ 0 ^ sxmo_bluetoothmenu.sh")
 			$(command -v megapixels >/dev/null && echo "$icon_cam Camera ^ 0 ^ GDK_SCALE=2 megapixels")
 			$icon_net Networks                                           ^ 0 ^ swayphone_appmenu network
-			$(command -v gnome-maps >/dev/null && echo "$icon_gps Maps   ^ 0 ^ gnome-maps")
 			$icon_cfg Config                                             ^ 0 ^ swayphone_appmenu config
 		"
 		WINNAME=Sys
