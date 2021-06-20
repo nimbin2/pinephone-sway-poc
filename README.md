@@ -13,7 +13,6 @@ I'm using Dejvino's sway poc: https://github.com/Dejvino/pinephone-sway-poc
 And dreemurrs Arch linux distro: https://github.com/dreemurrs-embedded/Pine64-Arch/releases
 So maybe some scripts just work with thoose in the backpack..
 
-Actually the dialer and sms script work with vis-menu, sou you'll get a terminal window with a list of your contacts (~/.config/sxmo/contacts.tsv) to choose.
 
 ### Installation
 #### Install encrypted Arch Linux arm 
@@ -46,8 +45,8 @@ Make sure to install Dejvino's sway poc first.
 <table>
    <thead><th>Command</th><th>Hint</th></thead>
    <tbody>
-	   <tr><td>make install</td><td>1. Install required packages for arch build</br>2. Copy all required scripts to system.</br>3. Create a diff file if the file existed on system in "diff/$(DATE_YYMMDD)/"</br>4. Enable required services</td></tr>
-	   <tr><td>make fetch</td><td>1. Copy all required scripts from system to this directory.</br>2. Create a diff file if the file exist "diff/$(DATE_YYMMDD)/"</td></tr>
+	   <tr><td>make install</td><td>1. Install required packages for arch build</br>2. Copy all required scripts to system.</br>3. Create a diff file if the file exists on system and differs to to it in "diff/$(DATE_YYMMDD)/"</br>4. Enable required services</td></tr>
+	   <tr><td>make fetch</td><td>1. Copy all required scripts from system to this directory.</br>2. Create a diff file if the file differs to the git file "diff/$(DATE_YYMMDD)/"</td></tr>
    </tbody>
 </table>
 
