@@ -19,13 +19,21 @@ notify_state() {
       notify-send -t 5000 -u low "Sim state: $(swayphone_simstate)"
 }
 
+exit_unlock() {
+   retry=0
+   notify_state
+   systemctl --user stop sxmo_modemmonitor.service
+   notify-send -u critical -t 1800 "Modemmonitor stopped"
+}
+
 
 notify-send -t 1800 "Unlock Sim"
 if [ "$(swayphone_simstate)" == "registered" ]; then
    notify_state
    exit
 elif [ "$(swayphone_simstate)" == "failed" ]; then
-   notify_state
+   notify-send -t 5000 -u critical "No Sim"
+   exit_unlock
    exit
 else
    pkill wofi #kill existing dmenu
@@ -33,35 +41,41 @@ else
    swayphone_keyboard_show
 
    retry=1
+   retrys=0
    while [ $retry -eq 1 ]; do
-      if [ $(mmcli -L | grep -c "QUECTEL Mobile Broadband Module") != "1" ]; then
-         notify-send -t 1800 "no module.."
-         sleep 1.8s
-      else
-
-         #PICKED=$(dialog --inputbox "sim pin" 0 0 2>&1 1>/dev/tty);
-			PICKED="$(
-				# shellcheck disable=SC2039,SC3037
-				echo -e "Cancel\n0000\n1234" | cat | wofi -P --width="100%" --height="34" --yoffset="210" --xoffset="0" -S dmenu -l 3 -c -p "PIN:" | tr -d "\n\r "
-			)"
-
-         if [ -n "$PICKED" ] && [ "$PICKED" != "Cancel" ]; then
-            echo $(sim_n)
-            retry=0
-            mmcli -i "$(sim_n)" --pin "$PICKED" > /tmp/unlockmsg 2>&1 || retry=1
-            MSG=$(cat /tmp/unlockmsg)
-            notify_state
-            if echo "$MSG" | grep -qE '(not SIM-PIN locked|successfully sent PIN)'; then
-               retry=0
-            else
-               sleep 3s
-            fi
+      retrys="$((retrys + 1))"
+      if [ $retrys -le 10 ]; then
+         if [ $(mmcli -L | grep -c "QUECTEL Mobile Broadband Module") != "1" ]; then
+            notify-send -t 1800 "no module.."
+            sleep 1.8s
+         elif [ "$(swayphone_simstate)" == "failed" ]; then
+            notify-send -t 5000 -u critical "No Sim"
+            exit_unlock
          else
-            retry=0
-            notify_state
-            systemctl --user stop sxmo_modemmonitor.service
-            notify-send -u critical -t 1800 "Modemmonitor stopped"
+            #PICKED=$(dialog --inputbox "sim pin" 0 0 2>&1 1>/dev/tty);
+            PICKED="$(
+               # shellcheck disable=SC2039,SC3037
+               echo -e "Cancel\n0000\n1234" | cat | wofi -P --width="100%" --height="34" --yoffset="210" --xoffset="0" -S dmenu -l 3 -c -p "PIN:" | tr -d "\n\r "
+            )"
+
+            if [ -n "$PICKED" ] && [ "$PICKED" != "Cancel" ]; then
+               echo $(sim_n)
+               retry=0
+               mmcli -i "$(sim_n)" --pin "$PICKED" > /tmp/unlockmsg 2>&1 || retry=1
+               MSG=$(cat /tmp/unlockmsg)
+               notify_state
+               if echo "$MSG" | grep -qE '(not SIM-PIN locked|successfully sent PIN)'; then
+                  retry=0
+               else
+                  sleep 3s
+               fi
+            else
+               exit_unlock
+            fi
          fi
+      else
+         exit_unlock
+
       fi
    done
 fi
