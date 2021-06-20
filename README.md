@@ -33,6 +33,7 @@ Connect to ethernet with the hub or to wifi by entering ```sudo wifi-menu```</br
 Install required packages ```sudo pacman -Sy git make```</br>
 
 You may want to change the make file to your needs (like changing the package manager if you dont use Arch Linux).
+You may want to remove packages from the Make file at the  REQUIRED_PACKAGES_ADD variable as qutebrowser, telegram, cmus or calcurse.
 ```
 git clone --recursive https://github.com/nimbin2/pinephone-sway-poc.git
 cd pinephone-sway-poc && make install

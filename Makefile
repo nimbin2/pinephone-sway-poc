@@ -6,10 +6,10 @@ YELLOW=\033[1;33m
 GREEN=\033[0;32m
 NC=\033[0m
 
-REQUIRED_PACKAGES=linux sway waybar wofi swaylock swayidle squeekboard bash dialog tzdata networkmanager htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg firefox qutebrowser inotify-tools jq libnotify mako python termite vis vlc noto-fonts noto-fonts-emoji noto-fonts-extra
+REQUIRED_PACKAGES=linux sway waybar wofi swaylock swayidle squeekboard bash dialog tzdata htop pavucontrol alsa-utils bc bash-completion dbus-glib dunst  evemu ffmpeg inotify-tools jq libnotify mako python termite vis vlc 
 REQUIRED_PACKAGES_USER_COMPONENTS=networkmanager htop pavucontrol
 REQUIRED_PACKAGES_BUILD_TOOLS=base-devel git make gcc meson ninja cargo linux-headers libinput udev
-REQUIRED_PACKAGES_ADD=noto-fonts-emoji poppler pulseaudio megapixels calcurse cmus telegram-desktop
+REQUIRED_PACKAGES_ADD=noto-fonts noto-fonts-emoji noto-fonts-extra poppler firefox qutebrowser pulseaudio megapixels calcurse cmus telegram-desktop
 
 INSTALL_PACMAN_Y=sudo pacman --needed -Sy
 INSTALL_PACMAN=sudo pacman --needed -S
