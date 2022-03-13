@@ -1,3 +1,6 @@
+<h2>!!! No more need for this as sxmo switched to sway and is making it alot better than me;)</br>
+Check out https://sxmo.org/ !!!</h2>
+
 Original Readme: https://github.com/Dejvino/pinephone-sway-poc/blob/master/README.md
 
 
